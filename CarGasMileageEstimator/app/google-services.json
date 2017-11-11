@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "65065646296",
+    "firebase_url": "https://cargasmileageestimator-47e0b.firebaseio.com",
+    "project_id": "cargasmileageestimator-47e0b",
+    "storage_bucket": "cargasmileageestimator-47e0b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65065646296:android:fbd41911f5943869",
+        "android_client_info": {
+          "package_name": "edu.umkc.mobile.cargasmileageestimator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65065646296-u5q0oqn7q2oqs8a1a65rnlu4v3qe2200.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.umkc.mobile.cargasmileageestimator",
+            "certificate_hash": "97ddbd689490daea9807f0e167953a884d12261d"
+          }
+        },
+        {
+          "client_id": "65065646296-fn33m0d94imkmkr5jjvmvpbc3n660qct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmGJ3VI5lzdfCYoChEOmmI8LbSFn6OHog"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65065646296-fn33m0d94imkmkr5jjvmvpbc3n660qct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

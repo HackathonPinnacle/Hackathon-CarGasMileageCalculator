@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_testDrive"
+        android:icon="@drawable/ic_drive_eta_black_24dp"
+        android:title="@string/title_testDrive" />
+
+    <item
+        android:id="@+id/navigation_addFuel"
+        android:icon="@drawable/ic_ev_station_black_24dp"
+        android:title="@string/title_addFuel" />
+
+    <item
+        android:id="@+id/navigation_stats"
+        android:icon="@drawable/ic_pie_chart_black_24dp"
+        android:title="@string/title_statistics" />
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/title_settings" />
+
+</menu>
