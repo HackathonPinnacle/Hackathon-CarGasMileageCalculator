@@ -16,6 +16,11 @@ public class MileageRecord {
 	protected Date date;
 	protected ArrayList<Double> originsLatitudes;
 	protected ArrayList<Double> originsLongitudes;
+	protected double gas = 15.0;
+	protected double range = 450.0;
+	protected double mileage = 30.0;
+	protected double totalDistance = 3000;
+	protected double totalGasUtilized = 100;
 	
 	public MileageRecord() {
 		originsLatitudes = new ArrayList<Double>();
@@ -45,7 +50,47 @@ public class MileageRecord {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
+
+	public double getGas() {
+		return gas;
+	}
+
+	public void setGas(double gas) {
+		this.gas = gas;
+	}
+
+	public double getRange() {
+		return range;
+	}
+
+	public void setRange(double range) {
+		this.range = range;
+	}
+
+	public double getMileage() {
+		return mileage;
+	}
+
+	public void setMileage(double mileage) {
+		this.mileage = mileage;
+	}
+
+	public double getTotalDistance() {
+		return totalDistance;
+	}
+
+	public void setTotalDistance(double totalDistance) {
+		this.totalDistance = totalDistance;
+	}
+
+	public double getTotalGasUtilized() {
+		return totalGasUtilized;
+	}
+
+	public void setTotalGasUtilized(double totalGasUtilized) {
+		this.totalGasUtilized = totalGasUtilized;
+	}
+
 	/**
 	 * Add a coordinate to the list
 	 * 

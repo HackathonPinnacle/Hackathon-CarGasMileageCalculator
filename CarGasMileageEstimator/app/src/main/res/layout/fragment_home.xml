@@ -4,89 +4,201 @@
     android:layout_height="match_parent"
     tools:context="edu.umkc.mobile.cargasmileageestimator.HomeFragment">
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/tableLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        <TableRow
-            android:id="@+id/tableRow1"
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/colorPrimary"
+        android:gravity="left"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
+
+
+        <TextView
+            android:id="@+id/distance_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:text="@string/distance_label"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/distance_label"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <TextView
-                android:id="@+id/text_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
+        <TextView
+            android:id="@+id/text_distance"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/distance_label"
+            android:padding="10dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent" />
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/unit_selection_label"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <Spinner
-                android:id="@+id/spinner_Unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-            <!-- android:entries="@array/unit_options" /> -->
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow3"
+        <TextView
+            android:id="@+id/gas_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/distance_label"
+            android:text="@string/gas_label"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"/>
 
-            <Button
-                android:id="@+id/button_startTracking"
-                style="@style/ButtonText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/start_label"
-                />
-        </TableRow>
 
-        <TableRow
-            android:id="@+id/tableRow4"
+        <TextView
+            android:id="@+id/text_gas"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/gas_label"
+            android:layout_below="@+id/distance_label"
+            android:padding="10dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent" />
 
-            <Button
-                android:id="@+id/button_stopTracking"
-                style="@style/ButtonText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:text="@string/stop_label" />
-        </TableRow>
-        <TableRow
-            android:id="@+id/tableRow5"
+
+        <TextView
+            android:id="@+id/range_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/gas_label"
+            android:text="@string/range_label"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"/>
 
 
-        </TableRow>
-    </TableLayout>
+        <TextView
+            android:id="@+id/text_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/range_label"
+            android:layout_below="@+id/gas_label"
+            android:padding="10dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent" />
+
+
+        <TextView
+            android:id="@+id/mileage_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/range_label"
+            android:text="@string/mileage_label"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/text_mileage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/mileage_label"
+            android:layout_below="@+id/range_label"
+            android:padding="10dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent" />
+
+
+        <TextView
+            android:id="@+id/total_distance_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mileage_label"
+            android:text="@string/total_distance_label"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/text_total_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/total_distance_label"
+            android:layout_below="@+id/mileage_label"
+            android:padding="10dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent" />
+
+
+        <TextView
+            android:id="@+id/total_gas_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/total_distance_label"
+            android:text="@string/total_gas_label"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/text_total_gas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/total_gas_label"
+            android:layout_below="@+id/total_distance_label"
+            android:padding="10dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent" />
+
+
+        <TextView
+            android:id="@+id/total_gas_cost_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/total_gas_label"
+            android:text="@string/total_gas_cost"
+            android:padding="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/text_total_gas_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/total_gas_cost_label"
+            android:layout_below="@+id/total_gas_label"
+            android:padding="10dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorAccent" />
+
+
+        <Button
+            android:id="@+id/button_startTracking"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="@color/colorAccent"
+            android:text="@string/start_label"
+            android:textColor="@android:color/black"
+            android:layout_below="@+id/total_gas_cost_label"/>
+
+        <Button
+            android:id="@+id/button_stopTracking"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="@color/colorAccent"
+            android:text="@string/stop_label"
+            android:textColor="@android:color/black"
+            android:layout_below="@+id/button_startTracking"/>
+
+    </RelativeLayout>
+
 
 </FrameLayout>

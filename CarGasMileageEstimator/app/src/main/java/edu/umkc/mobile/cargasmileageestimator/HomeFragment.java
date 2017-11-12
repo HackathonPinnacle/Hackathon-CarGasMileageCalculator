@@ -1,15 +1,23 @@
 package edu.umkc.mobile.cargasmileageestimator;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,19 +27,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import edu.umkc.mobile.cargasmileageestimator.data.MileageCollection;
 import edu.umkc.mobile.cargasmileageestimator.data.MileageData;
 import edu.umkc.mobile.cargasmileageestimator.distance.DistanceService;
 import edu.umkc.mobile.cargasmileageestimator.distance.DistanceServiceNativeImpl;
 import edu.umkc.mobile.cargasmileageestimator.enums.UnitEnum;
+import edu.umkc.mobile.cargasmileageestimator.model.MileageModel;
 import edu.umkc.mobile.cargasmileageestimator.model.MileageRecord;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link HomeFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
@@ -53,9 +62,22 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     // widgets used for this activity
     protected Button startTracking;
     protected Button stopTracking;
-    protected Spinner unitValue;
+    //protected Spinner unitValue;
     protected TextView distanceText;
-    protected ArrayAdapter<String> unitDataAdapter;
+    protected TextView rangeText;
+    protected TextView gasText;
+    protected TextView mileageText;
+    protected TextView text_total_distance;
+    protected TextView text_total_gas;
+    protected TextView text_total_gas_cost;
+
+
+    String INSERT_API_URL = "http://10.205.0.32:8080/api/insertMileageCollection/";
+    String GET_API_URL = "http://10.205.0.32:8080/api/getMileageCollection/";
+    MileageCollection mileageCollection;
+    MileageModel model = new MileageModel();
+
+    //protected ArrayAdapter<String> unitDataAdapter;
 
     // data handles
     protected MileageData mileageData;
@@ -69,6 +91,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     protected LocationListener mlocListener;
 
     protected DistanceService distanceService = new DistanceServiceNativeImpl();
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -105,27 +128,68 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view =  inflater.inflate(R.layout.fragment_home, container, false);
+
+        // initialize the UI
+        initializeUI(view);
+
+        // update the current state
+        updateUIState();
+
+        // data to keep track of
+        mileageData = new MileageData(getContext());
+
+        // location
+        mlocManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        mlocListener = new MileageLocationListener();
+
+        return view;
+    }
+
+    /**
+     * Called when a configuration change is made (ex: change in orientation)
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    private void initializeUI(View view) {
 
         // get the distance text
         distanceText = (TextView) view.findViewById(R.id.text_distance);
+        gasText = (TextView) view.findViewById(R.id.text_gas);
+        rangeText = (TextView) view.findViewById(R.id.text_range);
+        mileageText = (TextView) view.findViewById(R.id.text_mileage);
+        text_total_distance= (TextView) view.findViewById(R.id.text_total_distance);
+        text_total_gas= (TextView) view.findViewById(R.id.text_total_gas);
+        text_total_gas_cost= (TextView) view.findViewById(R.id.text_total_gas_cost);
+
+        DateFormat df = new SimpleDateFormat("MMddyyyy");
+
+// Get the date today using Calendar object.
+        Date today = Calendar.getInstance().getTime();
+// Using DateFormat format method we can create a string
+// representation of a date with the defined format.
+        String reportDate = df.format(today);
+        new HttpGetAsyncTask().execute(GET_API_URL+reportDate);
+
 
         // get the buttons
         startTracking = (Button) view.findViewById(R.id.button_startTracking);
         stopTracking = (Button) view.findViewById(R.id.button_stopTracking);
-        unitValue = (Spinner) view.findViewById(R.id.spinner_Unit);
 
         // populate unit spinner
-        List<String> labels = new ArrayList<String>(UnitEnum.values().length);
+       /* List<String> labels = new ArrayList<String>(UnitEnum.values().length);
         for (UnitEnum unit : UnitEnum.values()) {
             labels.add(unit.getLabel());
         }
-        unitDataAdapter = new ArrayAdapter<String>(getContext(),
+        unitDataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, labels);
         unitDataAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unitValue.setAdapter(unitDataAdapter);
-        unitDataAdapter.notifyDataSetChanged();
+        unitDataAdapter.notifyDataSetChanged();*/
 
         // add a listeners on the buttons
         startTracking.setOnClickListener(new View.OnClickListener() {
@@ -159,8 +223,10 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         });
 
 
-        //update UI state
 
+    }
+
+    private void updateUIState() {
         if (tracking) {
             // tracking - enable pause
             enablePauseButton();
@@ -185,17 +251,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         }
 
         // update the distance display
-        if (currentMileageRecord != null)
-            updateDistanceDriven(currentMileageRecord.getDistance());
-
-        // data to keep track of
-        mileageData = new MileageData(getContext());
-
-        // location
-        mlocManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        mlocListener = new MileageLocationListener();
-
-        return view;
+        if(currentMileageRecord != null)
+            updateMileage(currentMileageRecord);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -211,7 +268,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            Toast.makeText(context, "Home Fragment Attached", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Settings Fragment Attached", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -234,11 +291,6 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
     }
 
     // enable clicking on start
@@ -271,17 +323,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
     // enable location updates from the gps
     public void enableLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0,
+        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 0,
                 mlocListener); // 90 seconds, 1km
     }
 
@@ -300,13 +342,13 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         startTracking.setEnabled(false);
 
         // don't allow changing the unit
-        unitValue.setEnabled(false);
+       // unitValue.setEnabled(false);
 
         // create a new record
         currentMileageRecord = new MileageRecord();
         currentMileageRecord.setDate(new Date(System.currentTimeMillis()));
         currentMileageRecord.setDistance(0);
-        currentMileageRecord.setUnit((String) unitValue.getSelectedItem());
+        currentMileageRecord.setUnit("MILES");
 
         // enable gps
         enableLocationUpdates();
@@ -362,7 +404,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         enableStartButton();
 
         // allow changing the unit
-        unitValue.setEnabled(true);
+        //unitValue.setEnabled(true);
     }
 
     /**
@@ -387,25 +429,74 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     /**
      * Update the value of the distance driven on the UI
      *
-     * @param meterDistance
+     * @param mileageRecord
      */
-    public void updateDistanceDriven(double meterDistance) {
+    public void updateMileage(MileageRecord mileageRecord) {
 
         // determine how the distance should be displayed
-        String selectedUnit = unitValue.getSelectedItem().toString();
+        String selectedUnit = "MILES";
 
         double adjustedDistance = 0;
-
+        int count =0;
         for (UnitEnum unit : UnitEnum.values()) {
-            if (unit.getLabel().equals(selectedUnit)) {
-                adjustedDistance = unit.convertFromMeters(meterDistance);
+            if (count==1) {
+                adjustedDistance = unit.convertFromMeters(mileageRecord.getDistance());
             }
+            count++;
         }
 
+        double adjustedRange = 0;
+        adjustedRange = mileageRecord.getRange() - adjustedDistance;
+        String range = Double.toString((double)Math.round(adjustedRange*100.0)/100.0)+" miles";
+
+        rangeText.setText(range);
+
+        double mileage = mileageRecord.getMileage();
+        double adjustedGas = 0;
+        adjustedGas = mileageRecord.getGas() - (adjustedDistance/mileage);
+        String gas = Double.toString((double)Math.round(adjustedGas*100.0)/100.0)+" gallons";
+
+        gasText.setText(gas);
+
+        String totalDistance = Double.toString((double)Math.round((mileageRecord.getTotalDistance()+adjustedDistance)*100.0)/100.0)+" miles";
+        text_total_distance.setText(totalDistance);
+
+        String totalGas = Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized())*100.0)/100.0)+" gallons";
+        text_total_gas.setText(totalGas);
+
+        String totalGasCost = "$"+Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized() * 2.56)*100.0)/100.0);
+        text_total_gas_cost.setText(totalGasCost);
+
+        mileage = mileageRecord.getMileage();
+        String mileageString = Double.toString((double)Math.round(mileage*100.0)/100.0)+" mpg";
+        mileageText.setText(mileageString);
+
         // distance in correct unit
-        String distance = Integer.toString((int) Math.round(adjustedDistance));
+        String distance = Double.toString((double)Math.round(adjustedDistance*100.0)/100.0)+" miles";
 
         distanceText.setText(distance);
+
+        mileageCollection = new MileageCollection();
+        mileageCollection.setDistance(Double.toString((double)Math.round(adjustedDistance*100.0)/100.0));
+        mileageCollection.setGasRemaining(Double.toString((double)Math.round(adjustedGas*100.0)/100.0));
+        mileageCollection.setRange(Double.toString((double)Math.round(adjustedRange*100.0)/100.0));
+        mileageCollection.setMileage(Double.toString((double)Math.round(mileage*100.0)/100.0));
+        DateFormat df = new SimpleDateFormat("MMddyyyy");
+
+// Get the date today using Calendar object.
+        Date today = Calendar.getInstance().getTime();
+// Using DateFormat format method we can create a string
+// representation of a date with the defined format.
+        String reportDate = df.format(today);
+        mileageCollection.setDate(reportDate);
+
+        mileageCollection.setCar_id("1234");
+        mileageCollection.setTotalDistance(Double.toString((double)Math.round((mileageRecord.getTotalDistance()+adjustedDistance)*100.0)/100.0));
+        mileageCollection.setTotalGas(Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized())*100.0)/100.0));
+        mileageCollection.setTotalGasCost(Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized() * 2.56)*100.0)/100.0));
+        mileageCollection.setId(Math.random()+reportDate);
+        new HttpAsyncTask().execute(INSERT_API_URL);
+
     }
 
 
@@ -415,7 +506,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     public void updateWithCurrentLocation() {
 
 		/*
-         *
+		 *
 		 * figure out how to include either a timer or callback of some sort before enabling this
 		 *
 		// add a one-time listener to get the location quickly
@@ -425,16 +516,6 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 		*/
 
         // get the current location from the last known -- this will just be used as a backup source
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
         Location currentLocation = mlocManager
                 .getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
@@ -480,7 +561,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
                     + distanceTravelled);
 
             // update the UI
-            updateDistanceDriven(currentMileageRecord.getDistance());
+            updateMileage(currentMileageRecord);
         }
     }
 
@@ -559,4 +640,46 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
     }
 
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+
+            return model.POST(urls[0],mileageCollection);
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getContext(), "Data Sent!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class HttpGetAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            return model.GET(urls[0]);
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getContext(), "Received!", Toast.LENGTH_LONG).show();
+            try {
+                if(result!=null && !"".equalsIgnoreCase(result)){
+                    JSONObject json = new JSONObject(result);
+                    distanceText.setText(json.getString("distance")+" miles");
+                    gasText.setText(json.getString("gasRemaining")+" gallons");
+                    rangeText.setText(json.getString("range")+ "miles");
+                    mileageText.setText(json.getString("mileage")+" mpg");
+                    text_total_distance.setText(json.getString("totalDistance")+" miles");
+                    text_total_gas.setText(json.getString("totalGas")+" gallons");
+                    text_total_gas_cost.setText("$"+json.getString("totalGasCost"));
+                }
+
+            }catch (Exception e){
+
+            }
+
+        }
+    }
 }

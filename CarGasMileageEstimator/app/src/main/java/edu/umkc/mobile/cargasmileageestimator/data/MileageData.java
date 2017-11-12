@@ -30,6 +30,11 @@ public class MileageData extends SQLiteOpenHelper {
 	public static final String DISTANCE = "distance";
 	public static final String UNIT = "unit";
 	public static final String DATE = "date";
+	public static final String GAS = "gas";
+	public static final String RANGE = "range";
+	public static final String MPG = "mpg";
+	public static final String TOTAL_DISTANCE = "totalDistance";
+	public static final String TOTAL_GAS_UTILIZED = "totalGasUtilized";
 	
 
 	/**
@@ -47,6 +52,11 @@ public class MileageData extends SQLiteOpenHelper {
 		String sql = "CREATE TABLE "+TABLE_NAME + " ("
 		+ _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " 
 		+ DISTANCE + " INTEGER, "
+				+ GAS + " INTEGER, "
+				+ RANGE + " INTEGER, "
+				+ MPG + " INTEGER, "
+				+ TOTAL_DISTANCE + " INTEGER, "
+				+ TOTAL_GAS_UTILIZED + " INTEGER, "
 		+ DATE + " INTEGER NOT NULL "
 		+ ");";
 		
@@ -77,6 +87,11 @@ public class MileageData extends SQLiteOpenHelper {
 		// gather the values needed
 		ContentValues values = new ContentValues();
 		values.put(DISTANCE, mileageRecord.getDistance());
+		values.put(GAS, mileageRecord.getGas());
+		values.put(RANGE, mileageRecord.getRange());
+		values.put(MPG, mileageRecord.getMileage());
+		values.put(TOTAL_DISTANCE, mileageRecord.getMileage());
+		values.put(TOTAL_GAS_UTILIZED, mileageRecord.getMileage());
 		values.put(DATE, mileageRecord.getDate().getTime());
 		
 		// do the insert

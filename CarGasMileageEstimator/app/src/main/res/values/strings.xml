@@ -46,7 +46,17 @@
 
     <string name="hello">Hello World, SimpleMileageActivity!</string>
     <string name="unit_selection_label">Unit:</string>
-    <string name="distance_label">Distance:</string>
+    <string name="distance_label">Distance travelled:</string>
+    <string name="total_distance_label">Total Distance travelled:</string>
+    <string name="distance_units">miles</string>
+    <string name="gas_label">Gas Remaining:</string>
+    <string name="gas_units">gallons</string>
+    <string name="range_label">Range:</string>
+    <string name="range_units">miles</string>
+    <string name="mileage_label">Mileage:</string>
+    <string name="mileage_units">mpg</string>
+    <string name="total_gas_label">Total Gas Utilized:</string>
+    <string name="total_gas_cost">Total Gas Cost (US)$2.56/gallon:</string>
     <string name="start_label">Start Tracking</string>
     <string name="pause_label">Pause Tracking</string>
     <string name="resume_label">Resume Tracking</string>
