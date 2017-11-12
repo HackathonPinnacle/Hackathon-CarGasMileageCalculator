@@ -72,8 +72,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     protected TextView text_total_gas_cost;
 
 
-    String INSERT_API_URL = "http://10.205.0.32:8080/api/insertMileageCollection/";
-    String GET_API_URL = "http://10.205.0.32:8080/api/getMileageCollection/";
+    String INSERT_API_URL = "http://10.205.0.55:8080/api/insertMileageCollection/";
+    String GET_API_URL = "http://10.205.0.55:8080/api/getMileageCollection/";
     MileageCollection mileageCollection;
     MileageModel model = new MileageModel();
 
@@ -663,7 +663,6 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getContext(), "Received!", Toast.LENGTH_LONG).show();
             try {
                 if(result!=null && !"".equalsIgnoreCase(result)){
                     JSONObject json = new JSONObject(result);

@@ -2,12 +2,30 @@ package edu.umkc.mobile.cargasmileageestimator;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import edu.umkc.mobile.cargasmileageestimator.data.MileageCollection;
+import edu.umkc.mobile.cargasmileageestimator.model.MileageModel;
 
 
 /**
@@ -29,6 +47,17 @@ public class StatsFragment extends android.support.v4.app.Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    public Spinner spinnerValue;
+    String label;
+    Integer labelCount;
+    List<MileageCollection> mileageCollections = null;
+    final Random random = new Random();
+    MileageModel model = new MileageModel();
+    String GET_API_URL = "http://10.205.0.55:8080/api/getAllMileageCollections/";
+    Map<String,Integer> distanceMap =null;
+    Map<String,Integer> fuelMap = null;
+    Map<String,Integer> mileageMap = null;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -65,7 +94,119 @@ public class StatsFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stats, container, false);
+        final View view =  inflater.inflate(R.layout.fragment_stats, container, false);
+
+        new StatsFragment.HttpAsyncTask().execute(GET_API_URL);
+
+        Spinner spinner=(Spinner)view.findViewById(R.id.spinner1);
+
+        List<String> dropdownlist = new ArrayList<>();
+        dropdownlist.add("--Select--");
+        dropdownlist.add("Distance");
+        dropdownlist.add("Fuel");
+        dropdownlist.add("Mileage");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, dropdownlist);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+
+        final LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout);
+
+        final PieChart p = new PieChart(getContext());
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(650,650);
+        p.setLayoutParams(lp);
+        //p.setBackgroundColor(0xffffffff);
+        p.setOnSliceClickListener(new PieChart.OnSliceClickListener() {
+            @Override
+            public void onSliceClicked(PieChart pieChart, int sliceNumber) {
+                spinnerValue = (Spinner) view.findViewById(R.id.spinner1);
+
+                if(spinnerValue.getSelectedItem().toString().equalsIgnoreCase("Distance")){
+
+                    List<String> keys = new ArrayList<String>(distanceMap.keySet());
+                    List<Integer> values = new ArrayList<Integer>(distanceMap.values());
+                    label = keys.get(sliceNumber);
+                    labelCount = values.get(sliceNumber);
+                    Toast.makeText(getContext(), label +": "+labelCount+" miles", Toast.LENGTH_SHORT).show();
+                }else if(spinnerValue.getSelectedItem().toString().equalsIgnoreCase("Fuel")){
+
+                    List<String> keys = new ArrayList<String>(fuelMap.keySet());
+                    List<Integer> values = new ArrayList<Integer>(fuelMap.values());
+                    label = keys.get(sliceNumber);
+                    labelCount = values.get(sliceNumber);
+                    Toast.makeText(getContext(), label +": "+labelCount+" gallons", Toast.LENGTH_SHORT).show();
+                }else if(spinnerValue.getSelectedItem().toString().equalsIgnoreCase("Mileage")){
+                    List<String> keys = new ArrayList<String>(mileageMap.keySet());
+                    List<Integer> values = new ArrayList<Integer>(mileageMap.values());
+                    label = keys.get(sliceNumber);
+                    labelCount = values.get(sliceNumber);
+                    Toast.makeText(getContext(), label +": "+labelCount+" mpg", Toast.LENGTH_SHORT).show();
+                }else{
+                    label = spinnerValue.getSelectedItem().toString() + sliceNumber;
+                    labelCount = sliceNumber;
+                }
+
+            }
+        });
+        layout.addView(p);
+
+        spinnerValue = (Spinner) view.findViewById(R.id.spinner1);
+
+
+        spinnerValue.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+                // TODO Auto-generated method stub
+                String  mselection=spinnerValue.getSelectedItem().toString();
+
+                if("Distance".equalsIgnoreCase(mselection)){
+                    float[] data = new float[distanceMap.size()];
+                    Iterator it = distanceMap.entrySet().iterator();
+                    int count=0;
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry)it.next();
+                        data[count] = Float.parseFloat(pair.getValue().toString());
+                        count++;
+                    }
+
+                    p.setSlices(data);
+                    p.anima();
+                }else if("Fuel".equalsIgnoreCase(mselection)){
+                    float[] data = new float[fuelMap.size()];
+                    Iterator it = fuelMap.entrySet().iterator();
+                    int count=0;
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry)it.next();
+                        data[count] = Float.parseFloat(pair.getValue().toString());
+                        count++;
+                    }
+
+                    p.setSlices(data);
+                    p.anima();
+                }else if("Mileage".equalsIgnoreCase(mselection)){
+                    float[] data = new float[mileageMap.size()];
+                    Iterator it = mileageMap.entrySet().iterator();
+                    int count=0;
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry)it.next();
+                        data[count] = Float.parseFloat(pair.getValue().toString());
+                        count++;
+                    }
+
+                    p.setSlices(data);
+                    p.anima();
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+                //
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -81,7 +222,7 @@ public class StatsFragment extends android.support.v4.app.Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            Toast.makeText(context, "Stats Fragment Attached", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Stats Fragment Attached", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -104,5 +245,35 @@ public class StatsFragment extends android.support.v4.app.Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            try {
+                mileageCollections = model.GETALLCollection(GET_API_URL);
+                distanceMap = new LinkedHashMap<String, Integer>();
+                fuelMap = new LinkedHashMap<String, Integer>();
+                mileageMap = new LinkedHashMap<String, Integer>();
+                for (MileageCollection collection : mileageCollections) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddyyyy");
+                    Date tempDate = simpleDateFormat.parse(collection.getDate());
+                    SimpleDateFormat outputDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                    distanceMap.put(outputDateFormat.format(tempDate), Integer.parseInt(collection.getDistance()));
+                    fuelMap.put(outputDateFormat.format(tempDate), Integer.parseInt(collection.getGasRemaining()));
+                    mileageMap.put(outputDateFormat.format(tempDate), Integer.parseInt(collection.getMileage()));
+                }
+
+            }catch (Exception e){
+
+            }
+            return "SUCCESS";
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getContext(), "Data Sent!", Toast.LENGTH_LONG).show();
+        }
     }
 }
