@@ -4,10 +4,70 @@
     android:layout_height="match_parent"
     tools:context="edu.umkc.mobile.cargasmileageestimator.AddFuelFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/colorPrimary"
+        android:paddingLeft="20dp"
+
+        >
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update fuel details"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:id="@+id/textFuelDetails"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textFuelAdded"
+            android:text="Fuel Added:"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/textFuelDetails"
+            android:textColor="@color/colorAccent"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextFuelAdded"
+            android:hint="Fuel added in gallons"
+            android:textColorHint="@color/colorAccent"
+            android:paddingStart="20dp"
+            android:layout_toRightOf="@+id/textFuelAdded"
+            android:layout_below="@+id/textFuelDetails"
+            android:textColor="@color/colorAccent"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update fuel"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:id="@+id/btnUpdateFuel"
+            android:layout_below="@+id/editTextFuelAdded"
+            android:background="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textTotalFuel"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:text="fuel remaining: 10 gallons"
+            android:layout_marginTop="30dp"
+            android:layout_below="@+id/btnUpdateFuel"/>
+
+    </RelativeLayout>
 
 </FrameLayout>

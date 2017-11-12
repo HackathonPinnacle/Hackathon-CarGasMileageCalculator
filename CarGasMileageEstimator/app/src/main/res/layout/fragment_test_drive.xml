@@ -1,0 +1,313 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.umkc.mobile.cargasmileageestimator.TestDriveFragment">
+
+    <!--android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"-->
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/colorPrimary"
+
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please enter your car details!"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:id="@+id/textViewCarDetails"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textMake"
+            android:text="Make:"
+            android:paddingTop="20dp"
+            android:layout_below="@+id/textViewCarDetails"
+            android:textColor="@color/colorAccent"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextMake"
+            android:hint="Make"
+            android:textColorHint="@color/colorAccent"
+            android:paddingStart="20dp"
+            android:layout_toRightOf="@+id/textMake"
+            android:layout_below="@+id/textViewCarDetails"
+            android:textColor="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textModel"
+            android:text="Model:"
+            android:paddingTop="20dp"
+            android:layout_below="@+id/editTextMake"
+            android:textColor="@color/colorAccent"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextModel"
+            android:hint="Model"
+            android:paddingStart="20dp"
+            android:layout_toRightOf="@+id/textModel"
+            android:layout_below="@+id/editTextMake"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textYear"
+            android:text="Year:"
+            android:paddingTop="20dp"
+            android:layout_below="@+id/editTextModel"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextYear"
+            android:hint="Year"
+            android:paddingStart="20dp"
+            android:layout_toRightOf="@+id/textYear"
+            android:layout_below="@+id/editTextModel"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textOdometer"
+            android:text="Odometer Reading:"
+            android:paddingTop="20dp"
+            android:layout_below="@+id/editTextYear"
+            android:textColor="@color/colorAccent"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextOdometer"
+            android:hint="Odometer Reading"
+            android:paddingStart="20dp"
+            android:layout_toRightOf="@+id/textOdometer"
+            android:layout_below="@+id/editTextYear"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textFuelCap"
+            android:text="Tank Capacity:"
+            android:paddingTop="20dp"
+            android:layout_below="@+id/editTextOdometer"
+            android:textColor="@color/colorAccent"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextFuelCap"
+            android:hint="Tank Capacity"
+            android:paddingStart="20dp"
+            android:layout_toRightOf="@+id/textFuelCap"
+            android:layout_below="@+id/editTextOdometer"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"/>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editTextFuelCap"
+            android:text="Save Car Details"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:id="@+id/btnCarDetails"
+            android:background="@color/colorAccent"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test Drive"
+            android:id="@+id/testDrive"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:layout_below="@id/btnCarDetails"
+            android:visibility="invisible"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorAccent"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test Drive!"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:id="@+id/textView"
+            android:textSize="20dp"
+            android:visibility="invisible"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"/>
+
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="58dp"
+            android:weightSum="1"
+            android:id="@+id/radioGroup"
+            android:layout_below="@+id/textView"
+            android:visibility="invisible">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:text="Full Tank"
+                android:id="@+id/radioButton"
+                android:layout_gravity="center_horizontal"
+                android:checked="false"
+                android:textSize="25dp"
+                android:textColor="@color/colorAccent"/>
+
+            <!--RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Partial Tank"
+                android:id="@+id/radioButton2"
+                android:layout_gravity="center_horizontal"
+                android:checked="false"
+                android:textSize="25dp"
+                android:layout_weight="0.13"
+                /-->
+        </RadioGroup>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Run Test Drive"
+            android:id="@+id/btnRunTestDrive"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:layout_below="@id/radioGroup"
+            android:visibility="invisible"
+            android:background="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="Mileage Caculation Terms and Conditions:\n 1.Fill your tank completely. \n 2.Record the miles on the trip odometer right before you start a test drive. \n 3.Drive your car until you atleast utilize minimum of 5 gallons or until you travel 10 miles accurate results. \n 4.Fill up your tank again completely. Note down the amount of gallons needed to fill the tank."
+            android:textSize="15dp"
+            android:textStyle="italic"
+            android:layout_below="@id/btnRunTestDrive"
+            android:textColor="@color/colorRed"
+            android:id="@+id/textTermsAndConditions"
+            android:textAlignment="center"
+            android:visibility="invisible"/>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Proceed to Test drive"
+            android:id="@+id/btnProccedToTestDrive"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:layout_below="@id/textFuelCap"
+            android:visibility="invisible"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textEndOdometerReadings"
+            android:text="End Odometer Reading: "
+            android:paddingTop="20dp"
+            android:visibility="invisible"
+            android:layout_below="@+id/editTextFuelCap"
+            android:textColor="@color/colorAccent"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextEndOdometerReadings"
+            android:hint="End Odometer Readings"
+            android:paddingStart="20dp"
+            android:visibility="invisible"
+            android:layout_toRightOf="@+id/textEndOdometerReadings"
+            android:layout_below="@+id/editTextFuelCap"
+            android:textColorHint="@color/colorAccent"
+            android:textColor="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textFuelConsumed"
+            android:text="Fuel Consumed: "
+            android:paddingTop="20dp"
+            android:visibility="invisible"
+            android:layout_below="@+id/editTextEndOdometerReadings"
+            android:textColor="@color/colorAccent"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextFuelConsumed"
+            android:hint="Fuel Consumed"
+            android:paddingStart="20dp"
+            android:visibility="invisible"
+            android:layout_toRightOf="@+id/textFuelConsumed"
+            android:layout_below="@+id/editTextEndOdometerReadings"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Calculate Mileage"
+            android:id="@+id/btnCalculateMileage"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:layout_below="@id/editTextFuelConsumed"
+            android:visibility="invisible"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorAccent"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textMileage"
+            android:text=""
+            android:paddingTop="20dp"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textAlignment="center"
+            android:visibility="invisible"
+            android:layout_below="@+id/editTextEndOdometerReadings"
+            android:textColor="@color/colorAccent"/>
+
+    </RelativeLayout>
+    <!--/android.support.design.widget.CoordinatorLayout-->
+</FrameLayout>

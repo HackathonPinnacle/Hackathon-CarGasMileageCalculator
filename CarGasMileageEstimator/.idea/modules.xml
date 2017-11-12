@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CarGasMileageEstimator.iml" filepath="$PROJECT_DIR$/CarGasMileageEstimator.iml" />
+      <module fileurl="file://C:\Users\Esha Mayuri\Documents\Umkc\Sem3\Vinuthna\CarGasMileageEstimator\CarGasMileageEstimator.iml" filepath="C:\Users\Esha Mayuri\Documents\Umkc\Sem3\Vinuthna\CarGasMileageEstimator\CarGasMileageEstimator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\Esha Mayuri\Documents\Umkc\Sem3\Vinuthna\CarGasMileageEstimator\app\app.iml" filepath="C:\Users\Esha Mayuri\Documents\Umkc\Sem3\Vinuthna\CarGasMileageEstimator\app\app.iml" />
     </modules>
   </component>
 </project>

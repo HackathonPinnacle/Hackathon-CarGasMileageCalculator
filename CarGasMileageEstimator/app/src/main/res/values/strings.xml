@@ -39,7 +39,7 @@
     <string name="title_addFuel">Add Fuel</string>
     <string name="title_statistics">Statistics</string>
     <string name="title_settings">Settings</string>
-    <string name="title_testDrive">Test Drive</string>
+    <string name="title_testDrive">Car Details</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -65,7 +65,6 @@
 
     <string name="track_tab_label">Track Mileage</string>
     <string name="export_tab_label">Export Data</string>
-
 
 
     <style name="ButtonText">

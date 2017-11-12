@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
                     fragmentTransaction.replace(R.id.content,new SettingsFragment() ).commit();
                     return true;
                 case R.id.navigation_testDrive:
-                    fragmentTransaction.replace(R.id.content,new SettingsFragment() ).commit();
+                    fragmentTransaction.replace(R.id.content,new TestDriveFragment() ).commit();
                     return true;
             }
             return false;

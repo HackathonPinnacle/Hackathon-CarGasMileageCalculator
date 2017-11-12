@@ -1,6 +1,8 @@
 package edu.umkc.mobile.cargasmileageestimator;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
+
+
+    SharedPreferences sharedpreferences;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    Context context = this;
 
     private EditText inputEmail, inputPassword;
     private FirebaseAuth auth;
@@ -71,6 +78,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
+
+                sharedpreferences = context.getSharedPreferences(MyPREFERENCES, MODE_WORLD_READABLE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString("email", email);
+                editor.commit();
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
