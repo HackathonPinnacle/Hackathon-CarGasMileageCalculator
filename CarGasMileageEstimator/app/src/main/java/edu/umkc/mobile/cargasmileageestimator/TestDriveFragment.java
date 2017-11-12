@@ -323,7 +323,13 @@ public class TestDriveFragment extends android.support.v4.app.Fragment {
     public void CalculateMileage()
     {
         int distanceTravelled = Integer.parseInt(editTextEndOdometerReadings.getText().toString()) -InitialOdometerReading;
+
         Double Mileage = Math.round(distanceTravelled/Double.parseDouble(editTextFuelConsumed.getText().toString())*100.0)/100.0;
+
+        Double gasCost = 2.29;
+        Double totalGas = (Integer.parseInt(editTextEndOdometerReadings.getText().toString()) / Mileage);
+        Double totalGasCost = totalGas * gasCost;
+
         btnCalculateMileage.setVisibility(View.GONE);
         textOdometer.setVisibility(View.GONE);
         editTextOdometer.setVisibility(View.GONE);
@@ -349,6 +355,8 @@ public class TestDriveFragment extends android.support.v4.app.Fragment {
         carDetailsCollection.setMileage(Mileage.toString());
         carDetailsCollection.setFuel(editTextTankCapacity.getText().toString());
         carDetailsCollection.setId(String.valueOf(Math.random()+1234));
+        carDetailsCollection.setTotalGas(String.valueOf(totalGas));
+        carDetailsCollection.setTotalGasCost(String.valueOf(totalGasCost));
         new TestDriveFragment.HttpAsyncTask().execute(INSERT_API_URL);
     }
     // TODO: Rename method, update argument and hook method into UI event

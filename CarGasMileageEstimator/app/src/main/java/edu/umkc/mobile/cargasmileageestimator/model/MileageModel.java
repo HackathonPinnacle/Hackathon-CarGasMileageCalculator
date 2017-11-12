@@ -202,6 +202,8 @@ public class MileageModel {
             jsonObject.accumulate("tankCapacity", carDetailsCollection.getTankCapacity());
             jsonObject.accumulate("mileage", carDetailsCollection.getMileage());
             jsonObject.accumulate("fuel", carDetailsCollection.getFuel());
+            jsonObject.accumulate("totalGasCost", carDetailsCollection.getTotalGasCost());
+            jsonObject.accumulate("totalGas", carDetailsCollection.getTotalGas());
 
             // 4. convert JSONObject to JSON to String
             json = jsonObject.toString();

@@ -15,6 +15,8 @@ public class CarDetailsCollection {
     private String tankCapacity;
     private String mileage;
     private String fuel;
+    private String totalGasCost;
+    private String totalGas;
 
     public String getEmailId() {
         return emailId;
@@ -89,5 +91,21 @@ public class CarDetailsCollection {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTotalGasCost() {
+        return totalGasCost;
+    }
+
+    public void setTotalGasCost(String totalGasCost) {
+        this.totalGasCost = totalGasCost;
+    }
+
+    public String getTotalGas() {
+        return totalGas;
+    }
+
+    public void setTotalGas(String totalGas) {
+        this.totalGas = totalGas;
     }
 }
