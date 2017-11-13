@@ -15,6 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,7 +120,7 @@ public class StatsFragment extends android.support.v4.app.Fragment {
 
         final LinearLayout layout = (LinearLayout) view.findViewById(R.id.layout);
 
-        final PieChart p = new PieChart(getContext());
+        /*final PieChart p = new PieChart(getContext());
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(650,650);
         p.setLayoutParams(lp);
         //p.setBackgroundColor(0xffffffff);
@@ -150,7 +156,7 @@ public class StatsFragment extends android.support.v4.app.Fragment {
 
             }
         });
-        layout.addView(p);
+        layout.addView(p);*/
 
         spinnerValue = (Spinner) view.findViewById(R.id.spinner1);
 
@@ -163,41 +169,83 @@ public class StatsFragment extends android.support.v4.app.Fragment {
                 String  mselection=spinnerValue.getSelectedItem().toString();
 
                 if("Distance".equalsIgnoreCase(mselection)){
-                    float[] data = new float[distanceMap.size()];
-                    Iterator it = distanceMap.entrySet().iterator();
-                    int count=0;
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry)it.next();
-                        data[count] = Float.parseFloat(pair.getValue().toString());
-                        count++;
-                    }
+                    HorizontalBarChart barChart= (HorizontalBarChart) view.findViewById(R.id.chart);
 
-                    p.setSlices(data);
-                    p.anima();
+                    ArrayList<BarEntry> entries = new ArrayList<>();
+                    entries.add(new BarEntry(40f, 0));
+                    entries.add(new BarEntry(80f, 1));
+                    entries.add(new BarEntry(60f, 2));
+                    entries.add(new BarEntry(120f, 3));
+                    entries.add(new BarEntry(180f, 4));
+                    entries.add(new BarEntry(90f, 5));
+
+                    BarDataSet dataset = new BarDataSet(entries, "# of Calls");
+
+                    ArrayList<String> labels = new ArrayList<String>();
+                    labels.add("January");
+                    labels.add("February");
+                    labels.add("March");
+                    labels.add("April");
+                    labels.add("May");
+                    labels.add("June");
+
+
+                    BarData data = new BarData(labels, dataset);
+                    dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                    barChart.setData(data);
+                    barChart.animateY(5000);
                 }else if("Fuel".equalsIgnoreCase(mselection)){
-                    float[] data = new float[fuelMap.size()];
-                    Iterator it = fuelMap.entrySet().iterator();
-                    int count=0;
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry)it.next();
-                        data[count] = Float.parseFloat(pair.getValue().toString());
-                        count++;
-                    }
+                    HorizontalBarChart barChart= (HorizontalBarChart) view.findViewById(R.id.chart);
 
-                    p.setSlices(data);
-                    p.anima();
+                    ArrayList<BarEntry> entries = new ArrayList<>();
+                    entries.add(new BarEntry(1.2f, 0));
+                    entries.add(new BarEntry(2.4f, 1));
+                    entries.add(new BarEntry(4f, 2));
+                    entries.add(new BarEntry(8f, 3));
+                    entries.add(new BarEntry(5f, 4));
+                    entries.add(new BarEntry(3f, 5));
+
+                    BarDataSet dataset = new BarDataSet(entries, "# of Calls");
+
+                    ArrayList<String> labels = new ArrayList<String>();
+                    labels.add("January");
+                    labels.add("February");
+                    labels.add("March");
+                    labels.add("April");
+                    labels.add("May");
+                    labels.add("June");
+
+
+                    BarData data = new BarData(labels, dataset);
+                    dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                    barChart.setData(data);
+                    barChart.animateY(5000);
                 }else if("Mileage".equalsIgnoreCase(mselection)){
-                    float[] data = new float[mileageMap.size()];
-                    Iterator it = mileageMap.entrySet().iterator();
-                    int count=0;
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry)it.next();
-                        data[count] = Float.parseFloat(pair.getValue().toString());
-                        count++;
-                    }
+                    HorizontalBarChart barChart= (HorizontalBarChart) view.findViewById(R.id.chart);
 
-                    p.setSlices(data);
-                    p.anima();
+                    ArrayList<BarEntry> entries = new ArrayList<>();
+                    entries.add(new BarEntry(33.33f, 0));
+                    entries.add(new BarEntry(33f, 1));
+                    entries.add(new BarEntry(25f, 2));
+                    entries.add(new BarEntry(29f, 3));
+                    entries.add(new BarEntry(32f, 4));
+                    entries.add(new BarEntry(30, 5));
+
+                    BarDataSet dataset = new BarDataSet(entries, "# of Calls");
+
+                    ArrayList<String> labels = new ArrayList<String>();
+                    labels.add("January");
+                    labels.add("February");
+                    labels.add("March");
+                    labels.add("April");
+                    labels.add("May");
+                    labels.add("June");
+
+
+                    BarData data = new BarData(labels, dataset);
+                    dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                    barChart.setData(data);
+                    barChart.animateY(5000);
                 }
             }
             @Override

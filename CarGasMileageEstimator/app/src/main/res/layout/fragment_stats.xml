@@ -5,6 +5,9 @@
     tools:context="edu.umkc.mobile.cargasmileageestimator.StatsFragment"
     android:background="@color/colorPrimary">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,5 +33,12 @@
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dropdown" />
 
+        <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            />
+
     </LinearLayout>
+    </ScrollView>
 </FrameLayout>
