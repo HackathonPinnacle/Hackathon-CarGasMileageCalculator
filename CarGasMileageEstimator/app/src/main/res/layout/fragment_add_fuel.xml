@@ -64,7 +64,6 @@
             android:textAllCaps="true"
             android:textAlignment="center"
             android:textSize="20dp"
-            android:text="fuel remaining: 10 gallons"
             android:layout_marginTop="30dp"
             android:layout_below="@+id/btnUpdateFuel"/>
 

@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.umkc.mobile.cargasmileageestimator.data.CarDetailsCollection;
+import edu.umkc.mobile.cargasmileageestimator.data.EmailDetails;
 import edu.umkc.mobile.cargasmileageestimator.model.MileageModel;
 import android.support.v4.app.FragmentTransaction;
 
@@ -50,6 +52,7 @@ public class TestDriveFragment extends android.support.v4.app.Fragment {
     // TODO: Rename parameter arguments, choose names that match
 
     public static  String restoredEmailId ="";
+    public static String editedRestoredEmailId = "";
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -149,6 +152,10 @@ public class TestDriveFragment extends android.support.v4.app.Fragment {
         //restoredEmailId = prefs.getString("email", "");
         restoredEmailId = user.getEmail().toString();
 
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.email = restoredEmailId;
+
+
         //Initialising content
         final View view = inflater.inflate(R.layout.fragment_test_drive, container, false);
         textViewCarDetails = (TextView) view.findViewById(R.id.textViewCarDetails);
@@ -179,12 +186,15 @@ public class TestDriveFragment extends android.support.v4.app.Fragment {
 
         ///check if the db has car details. if so pull the details from db and display. and display mileage if already calculated.
         //checking db has car details and proceeding further
-        new TestDriveFragment.HttpGetAsyncTask().execute(GET_API_URL+restoredEmailId);
+        editedRestoredEmailId = restoredEmailId.replaceAll("\\.", "dot");
+        new TestDriveFragment.HttpGetAsyncTask().execute(GET_API_URL+editedRestoredEmailId);
+
+
 
         //If car details already exist displaying them
         if (editTextMake.getText().toString().trim().length()>0)
         {
-//            textViewCarDetails.setText("Here are your car details!");
+           //textViewCarDetails.setText("Here are your car details!");
 //            editTextMake.setText("TOYOTA");;
 //            editTextModel.setText("CAMRY LE");
 //            editTextYear.setText("2009");
@@ -255,7 +265,7 @@ public class TestDriveFragment extends android.support.v4.app.Fragment {
 
         ///http post to push car details along with user emailId.
         carDetailsCollection = new CarDetailsCollection();
-        carDetailsCollection.setEmailId(restoredEmailId);
+        carDetailsCollection.setEmailId(editedRestoredEmailId);
         carDetailsCollection.setMake(editTextMake.getText().toString());
         carDetailsCollection.setModel(editTextModel.getText().toString());
         carDetailsCollection.setYear(editTextYear.getText().toString());
@@ -327,8 +337,8 @@ public class TestDriveFragment extends android.support.v4.app.Fragment {
         Double Mileage = Math.round(distanceTravelled/Double.parseDouble(editTextFuelConsumed.getText().toString())*100.0)/100.0;
 
         Double gasCost = 2.29;
-        Double totalGas = (Integer.parseInt(editTextEndOdometerReadings.getText().toString()) / Mileage);
-        Double totalGasCost = totalGas * gasCost;
+        Double totalGas = Math.round((Integer.parseInt(editTextEndOdometerReadings.getText().toString()) / Mileage)*100.0)/100.0;
+        Double totalGasCost = Math.round(totalGas * gasCost*100.0)/100.0;
 
         btnCalculateMileage.setVisibility(View.GONE);
         textOdometer.setVisibility(View.GONE);
@@ -345,7 +355,7 @@ public class TestDriveFragment extends android.support.v4.app.Fragment {
         textMileage.setVisibility(View.VISIBLE);
 
         carDetailsCollection = new CarDetailsCollection();
-        carDetailsCollection.setEmailId(restoredEmailId);
+        carDetailsCollection.setEmailId(editedRestoredEmailId);
         carDetailsCollection.setMake(editTextMake.getText().toString());
         carDetailsCollection.setModel(editTextModel.getText().toString());
         carDetailsCollection.setYear(editTextYear.getText().toString());
