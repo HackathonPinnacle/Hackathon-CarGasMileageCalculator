@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     public static  String restoredEmailId ="";
-    public static String editedRestoredEmailId = "";
 
 
     TextView textFuelDetails;
@@ -55,11 +53,11 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    static Double fuelInDB = 0.0;
+    static int fuelInDB = 0;
 
 
-    String INSERT_API_URL = "http://10.205.0.55:8080/api/insertCarDetails/";
-    String GET_API_URL = "http://10.205.0.55:8080/api/getCarDetails/";
+    String INSERT_API_URL = "http://172.20.10.9:8080/api/insertCarDetailsCollection/";
+    String GET_API_URL = "http://172.20.10.9:8080/api/getCarDetailsCollection/";
     CarDetailsCollection carDetailsCollection;
 
     private OnFragmentInteractionListener mListener;
@@ -101,8 +99,6 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         final View view =  inflater.inflate(R.layout.fragment_add_fuel, container, false);
 
-
-
         textFuelDetails = (TextView)view.findViewById(R.id.textFuelDetails);
         textFuelAdded = (TextView)view.findViewById(R.id.textFuelAdded);
         editTextFuelAdded = (EditText)view.findViewById(R.id.editTextFuelAdded);
@@ -112,20 +108,17 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
         SharedPreferences prefs = getActivity().getSharedPreferences(LoginActivity.MyPREFERENCES, 0);
         //restoredEmailId = prefs.getString("email", "");
         restoredEmailId = user.getEmail().toString();
-        editedRestoredEmailId = restoredEmailId.replaceAll("\\.", "dot");
 
-
-        new AddFuelFragment.HttpGetAsyncTask().execute(GET_API_URL+editedRestoredEmailId);
+        new AddFuelFragment.HttpGetAsyncTask().execute(GET_API_URL+restoredEmailId);
 
         btnUpdateFuel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Double enteredFuel = Double.parseDouble(editTextFuelAdded.getText().toString());
-                Double totalFuel = fuelInDB + enteredFuel;
+                int totalFuel = fuelInDB + Integer.parseInt(editTextFuelAdded.getText().toString());
                 //Update fuel and push it to db.
                 carDetailsCollection = new CarDetailsCollection();
-                carDetailsCollection.setEmailId(editedRestoredEmailId);
+                carDetailsCollection.setEmailId(restoredEmailId);
                 carDetailsCollection.setFuel(String.valueOf(totalFuel));
                 new AddFuelFragment.HttpAsyncTask().execute(INSERT_API_URL);
 
@@ -211,7 +204,7 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
                 if (result != null && !"".equalsIgnoreCase(result)) {
                     JSONObject json = new JSONObject(result);
                     textTotalFuel.setText("fuel remaining: " +json.getString("fuel").toString());
-                    fuelInDB = Double.parseDouble(json.getString("fuel").toString());
+                    fuelInDB = Integer.parseInt(json.getString("fuel"));
                 }
 
             } catch (Exception e) {

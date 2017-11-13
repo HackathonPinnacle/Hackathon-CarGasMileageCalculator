@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,14 +51,14 @@ public class StatsFragment extends android.support.v4.app.Fragment {
 
     public Spinner spinnerValue;
     String label;
-    Integer labelCount;
+    Double labelCount;
     List<MileageCollection> mileageCollections = null;
     final Random random = new Random();
     MileageModel model = new MileageModel();
     String GET_API_URL = "http://10.205.0.55:8080/api/getAllMileageCollections/";
-    Map<String,Integer> distanceMap =null;
-    Map<String,Integer> fuelMap = null;
-    Map<String,Integer> mileageMap = null;
+    Map<String,Double> distanceMap =null;
+    Map<String,Double> fuelMap = null;
+    Map<String,Double> mileageMap = null;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -125,26 +126,26 @@ public class StatsFragment extends android.support.v4.app.Fragment {
                 if(spinnerValue.getSelectedItem().toString().equalsIgnoreCase("Distance")){
 
                     List<String> keys = new ArrayList<String>(distanceMap.keySet());
-                    List<Integer> values = new ArrayList<Integer>(distanceMap.values());
+                    List<Double> values = new ArrayList<Double>(distanceMap.values());
                     label = keys.get(sliceNumber);
                     labelCount = values.get(sliceNumber);
                     Toast.makeText(getContext(), label +": "+labelCount+" miles", Toast.LENGTH_SHORT).show();
                 }else if(spinnerValue.getSelectedItem().toString().equalsIgnoreCase("Fuel")){
 
                     List<String> keys = new ArrayList<String>(fuelMap.keySet());
-                    List<Integer> values = new ArrayList<Integer>(fuelMap.values());
+                    List<Double> values = new ArrayList<Double>(fuelMap.values());
                     label = keys.get(sliceNumber);
                     labelCount = values.get(sliceNumber);
                     Toast.makeText(getContext(), label +": "+labelCount+" gallons", Toast.LENGTH_SHORT).show();
                 }else if(spinnerValue.getSelectedItem().toString().equalsIgnoreCase("Mileage")){
                     List<String> keys = new ArrayList<String>(mileageMap.keySet());
-                    List<Integer> values = new ArrayList<Integer>(mileageMap.values());
+                    List<Double> values = new ArrayList<Double>(mileageMap.values());
                     label = keys.get(sliceNumber);
                     labelCount = values.get(sliceNumber);
                     Toast.makeText(getContext(), label +": "+labelCount+" mpg", Toast.LENGTH_SHORT).show();
                 }else{
                     label = spinnerValue.getSelectedItem().toString() + sliceNumber;
-                    labelCount = sliceNumber;
+                    labelCount = 1.0;
                 }
 
             }
@@ -253,20 +254,20 @@ public class StatsFragment extends android.support.v4.app.Fragment {
 
             try {
                 mileageCollections = model.GETALLCollection(GET_API_URL);
-                distanceMap = new LinkedHashMap<String, Integer>();
-                fuelMap = new LinkedHashMap<String, Integer>();
-                mileageMap = new LinkedHashMap<String, Integer>();
+                distanceMap = new LinkedHashMap<String, Double>();
+                fuelMap = new LinkedHashMap<String, Double>();
+                mileageMap = new LinkedHashMap<String, Double>();
                 for (MileageCollection collection : mileageCollections) {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddyyyy");
                     Date tempDate = simpleDateFormat.parse(collection.getDate());
                     SimpleDateFormat outputDateFormat = new SimpleDateFormat("MM-dd-yyyy");
-                    distanceMap.put(outputDateFormat.format(tempDate), Integer.parseInt(collection.getDistance()));
-                    fuelMap.put(outputDateFormat.format(tempDate), Integer.parseInt(collection.getGasRemaining()));
-                    mileageMap.put(outputDateFormat.format(tempDate), Integer.parseInt(collection.getMileage()));
+                    distanceMap.put(outputDateFormat.format(tempDate), Double.parseDouble(collection.getDistance()));
+                    fuelMap.put(outputDateFormat.format(tempDate), Double.parseDouble(collection.getGasRemaining()));
+                    mileageMap.put(outputDateFormat.format(tempDate), Double.parseDouble(collection.getMileage()));
                 }
 
             }catch (Exception e){
-
+                Log.d("a",e.getMessage());
             }
             return "SUCCESS";
         }

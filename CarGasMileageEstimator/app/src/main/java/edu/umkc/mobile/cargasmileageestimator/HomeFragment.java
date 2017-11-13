@@ -27,9 +27,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import edu.umkc.mobile.cargasmileageestimator.data.CarDetailsCollection;
 import edu.umkc.mobile.cargasmileageestimator.data.MileageCollection;
 import edu.umkc.mobile.cargasmileageestimator.data.MileageData;
 import edu.umkc.mobile.cargasmileageestimator.distance.DistanceService;
@@ -74,14 +78,20 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
     String INSERT_API_URL = "http://10.205.0.55:8080/api/insertMileageCollection/";
     String GET_API_URL = "http://10.205.0.55:8080/api/getMileageCollection/";
+    String GET_CAR_API_URL = "http://10.205.0.55:8080/api/getCarDetails/";
+    String INSERT_CAR_API_URL = "http://10.205.0.55:8080/api/insertCarDetails/";
+
     MileageCollection mileageCollection;
     MileageModel model = new MileageModel();
+    CarDetailsCollection carDetails = new CarDetailsCollection();
 
     //protected ArrayAdapter<String> unitDataAdapter;
 
     // data handles
-    protected MileageData mileageData;
+    //protected MileageData mileageData;
     protected MileageRecord currentMileageRecord;
+    public static  String restoredEmailId ="";
+    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     // state
     protected boolean tracking = false;
@@ -137,7 +147,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         updateUIState();
 
         // data to keep track of
-        mileageData = new MileageData(getContext());
+        //mileageData = new MileageData(getContext());
 
         // location
         mlocManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
@@ -173,6 +183,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 // representation of a date with the defined format.
         String reportDate = df.format(today);
         new HttpGetAsyncTask().execute(GET_API_URL+reportDate);
+        restoredEmailId = user.getEmail().toString().replaceAll("\\.", "dot");
+        new HttpGetCarDetailsAsyncTask().execute(GET_CAR_API_URL+restoredEmailId);
 
 
         // get the buttons
@@ -395,7 +407,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         disableLocationUpdates();
 
         // persist the distance
-        mileageData.insert(currentMileageRecord);
+       // mileageData.insert(currentMileageRecord);
 
         // reset the current record
         currentMileageRecord = null;
@@ -405,6 +417,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
         // allow changing the unit
         //unitValue.setEnabled(true);
+
     }
 
     /**
@@ -478,9 +491,9 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
         mileageCollection = new MileageCollection();
         mileageCollection.setDistance(Double.toString((double)Math.round(adjustedDistance*100.0)/100.0));
-        mileageCollection.setGasRemaining(Double.toString((double)Math.round(adjustedGas*100.0)/100.0));
+        carDetails.setFuel(Double.toString((double)Math.round(adjustedGas*100.0)/100.0));
         mileageCollection.setRange(Double.toString((double)Math.round(adjustedRange*100.0)/100.0));
-        mileageCollection.setMileage(Double.toString((double)Math.round(mileage*100.0)/100.0));
+        carDetails.setMileage(Double.toString((double)Math.round(mileage*100.0)/100.0));
         DateFormat df = new SimpleDateFormat("MMddyyyy");
 
 // Get the date today using Calendar object.
@@ -491,11 +504,17 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         mileageCollection.setDate(reportDate);
 
         mileageCollection.setCar_id("1234");
-        mileageCollection.setTotalDistance(Double.toString((double)Math.round((mileageRecord.getTotalDistance()+adjustedDistance)*100.0)/100.0));
-        mileageCollection.setTotalGas(Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized())*100.0)/100.0));
-        mileageCollection.setTotalGasCost(Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized() * 2.56)*100.0)/100.0));
+        carDetails.setOdometer(Double.toString((double)Math.round((mileageRecord.getTotalDistance()+adjustedDistance)*100.0)/100.0));
+        carDetails.setTotalGas(Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized())*100.0)/100.0));
+        carDetails.setTotalGasCost(Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized() * 2.56)*100.0)/100.0));
         mileageCollection.setId(Math.random()+reportDate);
+
+        mileageCollection.setGasRemaining(Double.toString((double)Math.round(adjustedGas*100.0)/100.0));
+        mileageCollection.setMileage(Double.toString((double)Math.round(mileage*100.0)/100.0));
+
+
         new HttpAsyncTask().execute(INSERT_API_URL);
+        new HttpAsyncCarTask().execute(INSERT_CAR_API_URL);
 
     }
 
@@ -654,6 +673,20 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         }
     }
 
+    private class HttpAsyncCarTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+
+            return model.POST_CarDetails(urls[0],carDetails);
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getContext(), "Data Sent!", Toast.LENGTH_LONG).show();
+        }
+    }
+
     private class HttpGetAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
@@ -667,12 +700,58 @@ public class HomeFragment extends android.support.v4.app.Fragment {
                 if(result!=null && !"".equalsIgnoreCase(result)){
                     JSONObject json = new JSONObject(result);
                     distanceText.setText(json.getString("distance")+" miles");
-                    gasText.setText(json.getString("gasRemaining")+" gallons");
+                    if(json.getString("mileage")!=null && json.getString("mileage")!="0")
+                         mileageText.setText(json.getString("mileage")+" mpg");
+                   /* gasText.setText(json.getString("gasRemaining")+" gallons");
                     rangeText.setText(json.getString("range")+ "miles");
-                    mileageText.setText(json.getString("mileage")+" mpg");
                     text_total_distance.setText(json.getString("totalDistance")+" miles");
                     text_total_gas.setText(json.getString("totalGas")+" gallons");
+                    text_total_gas_cost.setText("$"+json.getString("totalGasCost"));*/
+                }
+
+            }catch (Exception e){
+
+            }
+
+        }
+    }
+    private class HttpGetCarDetailsAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            return model.GET(urls[0]);
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if(result!=null && !"".equalsIgnoreCase(result)){
+                    JSONObject json = new JSONObject(result);
+                    if(mileageText.getText().toString().contains("0") || mileageText.getText().toString().contains("null"))
+                        mileageText.setText(json.getString("mileage")+" mpg");
+                    gasText.setText(json.getString("fuel")+" gallons");
+                    double adjustedRange = 0;
+                    double mil = Double.parseDouble(json.getString("mileage").toString());
+                    double ga = Double.parseDouble(json.getString("fuel"));
+                    adjustedRange = mil * ga;
+                    String range = Double.toString((double)Math.round(adjustedRange*100.0)/100.0)+" miles";
+                    rangeText.setText(range+ "miles");
+                    text_total_distance.setText(json.getString("odometer")+" miles");
+                    text_total_gas.setText(json.getString("totalGas")+" gallons");
                     text_total_gas_cost.setText("$"+json.getString("totalGasCost"));
+
+                    carDetails.setId(json.getString("id"));
+                    carDetails.setEmailId(json.getString("emailId"));
+                    carDetails.setMake(json.getString("make"));
+                    carDetails.setModel(json.getString("model"));
+                    carDetails.setYear(json.getString("year"));
+                    carDetails.setOdometer(json.getString("odometer"));
+                    carDetails.setTankCapacity(json.getString("tankCapacity"));
+                    carDetails.setMileage(json.getString("mileage"));
+                    carDetails.setFuel(json.getString("fuel"));
+                    carDetails.setTotalGas(json.getString("totalGas"));
+                    carDetails.setTotalGasCost(json.getString("totalGasCost"));
+
                 }
 
             }catch (Exception e){

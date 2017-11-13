@@ -16,11 +16,11 @@ public class MileageRecord {
 	protected Date date;
 	protected ArrayList<Double> originsLatitudes;
 	protected ArrayList<Double> originsLongitudes;
-	protected double gas = 15.0;
-	protected double range = 450.0;
-	protected double mileage = 30.0;
-	protected double totalDistance = 3000;
-	protected double totalGasUtilized = 100;
+	protected double gas;
+	protected double range;
+	protected double mileage;
+	protected double totalDistance;
+	protected double totalGasUtilized;
 	
 	public MileageRecord() {
 		originsLatitudes = new ArrayList<Double>();
