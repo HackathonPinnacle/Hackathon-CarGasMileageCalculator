@@ -294,6 +294,19 @@
             android:layout_marginTop="20dp"
             android:background="@color/colorAccent"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textMileageHeading"
+            android:text="Car Gas Mileage"
+            android:paddingTop="20dp"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textAlignment="center"
+            android:visibility="invisible"
+            android:textAllCaps="true"
+            android:layout_below="@+id/editTextEndOdometerReadings"
+            android:textColor="@color/colorAccent"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -305,7 +318,7 @@
             android:textSize="30dp"
             android:textAlignment="center"
             android:visibility="invisible"
-            android:layout_below="@+id/editTextEndOdometerReadings"
+            android:layout_below="@+id/textMileageHeading"
             android:textColor="@color/colorAccent"/>
 
     </RelativeLayout>

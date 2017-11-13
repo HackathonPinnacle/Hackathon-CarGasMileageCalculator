@@ -21,11 +21,22 @@
             android:layout_height="@dimen/logo_w_h"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/carmileagecalculator" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CAR GAS MILEAGE CALCULATOR"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textColor="@color/colorAccent"
+            android:id="@+id/textview"
+            />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
             <EditText
                 android:id="@+id/email"
@@ -35,7 +46,8 @@
                 android:hint="@string/hint_email"
                 android:inputType="textEmailAddress"
                 android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white" />
+                android:textColorHint="@android:color/white"
+                />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
