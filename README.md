@@ -11,8 +11,8 @@ Youtube Link - https://youtu.be/D3e-iCqGun0
 PPT - https://drive.google.com/open?id=1qcgX6eFlSt_KhjF9QqWuS4xXbyugEvU8
 
 Contributers:
-Vinuthna
-Esha
+Vinuthna,
+Esha and
 Merwan
 
 We would like to thank H&R block for giving us the opportunity to present our work on the usecase Car Gas Mileage Calculator Mobile App
