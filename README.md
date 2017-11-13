@@ -18,8 +18,13 @@ Merwan
 We would like to thank H&R block for giving us the opportunity to present our work on the usecase Car Gas Mileage Calculator Mobile App
 
 References:
+
 https://firebase.google.com/docs/android/setup
+
 https://developers.google.com/maps/documentation/distance-matrix
+
 https://github.com/PhilJay/MPAndroidChart
+
 https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/
+
 http://docs.mlab.com/
