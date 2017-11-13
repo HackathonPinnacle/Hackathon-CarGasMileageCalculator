@@ -11,24 +11,86 @@ import java.util.Date;
  */
 public class MileageRecord {
 	
-	/*protected double distance;
+	protected double distance;
 	protected String unit;
 	protected Date date;
 	protected ArrayList<Double> originsLatitudes;
 	protected ArrayList<Double> originsLongitudes;
-	protected double gas;
-	protected double range;
-	protected double mileage;
+	protected double gas ;
+	protected double range ;
+	protected double mileage ;
 	protected double totalDistance;
-	protected double totalGasUtilized;*/
-
-	protected ArrayList<Double> originsLatitudes;
-	protected ArrayList<Double> originsLongitudes;
+	protected double totalGasUtilized ;
 	
 	public MileageRecord() {
 		originsLatitudes = new ArrayList<Double>();
 		originsLongitudes = new ArrayList<Double>();
 	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public double getGas() {
+		return gas;
+	}
+
+	public void setGas(double gas) {
+		this.gas = gas;
+	}
+
+	public double getRange() {
+		return range;
+	}
+
+	public void setRange(double range) {
+		this.range = range;
+	}
+
+	public double getMileage() {
+		return mileage;
+	}
+
+	public void setMileage(double mileage) {
+		this.mileage = mileage;
+	}
+
+	public double getTotalDistance() {
+		return totalDistance;
+	}
+
+	public void setTotalDistance(double totalDistance) {
+		this.totalDistance = totalDistance;
+	}
+
+	public double getTotalGasUtilized() {
+		return totalGasUtilized;
+	}
+
+	public void setTotalGasUtilized(double totalGasUtilized) {
+		this.totalGasUtilized = totalGasUtilized;
+	}
+
 	/**
 	 * Add a coordinate to the list
 	 * 

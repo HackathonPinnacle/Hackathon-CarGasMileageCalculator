@@ -1,6 +1,5 @@
 package edu.umkc.mobile.cargasmileageestimator.data;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class MileageCollection {
@@ -24,8 +23,6 @@ public class MileageCollection {
 	private String totalGas;
 
 	private String totalGasCost;
-
-	protected String unit;
 
 
 	public String getDistance() {
@@ -106,57 +103,5 @@ public class MileageCollection {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	protected ArrayList<Double> originsLatitudes;
-	protected ArrayList<Double> originsLongitudes;
-
-	public MileageCollection() {
-		originsLatitudes = new ArrayList<Double>();
-		originsLongitudes = new ArrayList<Double>();
-	}
-	/**
-	 * Add a coordinate to the list
-	 *
-	 * @param latitude
-	 * @param longitude
-	 */
-	public void addCordinate(double latitude, double longitude) {
-		originsLatitudes.add(latitude);
-		originsLongitudes.add(longitude);
-	}
-
-	/**
-	 * Get the starting latitude
-	 *
-	 * @return
-	 */
-	public double getStartingLatitude() {
-		return originsLatitudes.get(0);
-	}
-
-	/**
-	 * Get the starting longitude coordinate
-	 *
-	 * @return
-	 */
-	public double getStartingLongitude() {
-		return originsLongitudes.get(0);
-	}
-
-	public double getPreviousLatitude() {
-		return originsLatitudes.size() > 0 ? originsLatitudes.get(originsLatitudes.size()-1) : 0;
-	}
-
-	public double getPreviousLongitude() {
-		return originsLongitudes.size() > 0 ? originsLongitudes.get(originsLongitudes.size()-1) : 0;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-
-	public void setUnit(String unit) {
-		this.unit = unit;
 	}
 }

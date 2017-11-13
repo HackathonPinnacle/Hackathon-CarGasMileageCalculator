@@ -56,10 +56,12 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     static Double fuelInDB = 0.0;
+    static Double totalFuelInDB = 0.0;
+    static Double totalFuelCost = 0.0;
 
 
-    String INSERT_API_URL = "http://10.205.0.55:8080/api/insertCarDetails/";
-    String GET_API_URL = "http://10.205.0.55:8080/api/getCarDetails/";
+    String INSERT_API_URL = "http://192.168.1.8:8080/api/insertCarDetails/";
+    String GET_API_URL = "http://192.168.1.8:8080/api/getCarDetails/";
     CarDetailsCollection carDetailsCollection;
 
     private OnFragmentInteractionListener mListener;
@@ -126,7 +128,11 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
                 //Update fuel and push it to db.
                 carDetailsCollection = new CarDetailsCollection();
                 carDetailsCollection.setEmailId(editedRestoredEmailId);
-                carDetailsCollection.setFuel(String.valueOf(totalFuel));
+                carDetailsCollection.setFuel(Double.toString((double)Math.round((totalFuel)*100.0)/100.0));
+                Double totalGas = totalFuelInDB + enteredFuel;
+                carDetailsCollection.setTotalGas(Double.toString((double)Math.round((totalGas)*100.0)/100.0));
+                Double totalGasCost = totalFuelCost + (totalFuel * 2.56);
+                carDetailsCollection.setTotalGasCost( Double.toString((double)Math.round((totalGasCost)*100.0)/100.0));
                 new AddFuelFragment.HttpAsyncTask().execute(INSERT_API_URL);
 
                 textTotalFuel.setText("fuel remaining: " + String.valueOf(totalFuel));
@@ -212,6 +218,8 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
                     JSONObject json = new JSONObject(result);
                     textTotalFuel.setText("fuel remaining: " +json.getString("fuel").toString());
                     fuelInDB = Double.parseDouble(json.getString("fuel").toString());
+                    totalFuelInDB = Double.parseDouble(json.getString("totalGas").toString());
+                    totalFuelCost = Double.parseDouble(json.getString("totalGasCost").toString());
                 }
 
             } catch (Exception e) {

@@ -103,8 +103,8 @@ public class TestDriveFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
 
 
-    String INSERT_API_URL = "http://10.205.0.55:8080/api/insertCarDetails/";
-    String GET_API_URL = "http://10.205.0.55:8080/api/getCarDetails/";
+    String INSERT_API_URL = "http://192.168.1.8:8080/api/insertCarDetails/";
+    String GET_API_URL = "http://192.168.1.8:8080/api/getCarDetails/";
     CarDetailsCollection carDetailsCollection;
     MileageModel model = new MileageModel();
 

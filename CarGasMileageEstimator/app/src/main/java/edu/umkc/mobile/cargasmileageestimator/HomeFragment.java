@@ -36,10 +36,12 @@ import org.json.JSONObject;
 
 import edu.umkc.mobile.cargasmileageestimator.data.CarDetailsCollection;
 import edu.umkc.mobile.cargasmileageestimator.data.MileageCollection;
+import edu.umkc.mobile.cargasmileageestimator.data.MileageData;
 import edu.umkc.mobile.cargasmileageestimator.distance.DistanceService;
 import edu.umkc.mobile.cargasmileageestimator.distance.DistanceServiceNativeImpl;
 import edu.umkc.mobile.cargasmileageestimator.enums.UnitEnum;
 import edu.umkc.mobile.cargasmileageestimator.model.MileageModel;
+import edu.umkc.mobile.cargasmileageestimator.model.MileageRecord;
 
 
 /**
@@ -75,21 +77,21 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     protected TextView text_total_gas_cost;
 
 
-    String INSERT_API_URL = "http://10.205.0.55:8080/api/insertMileageCollection/";
-    String GET_API_URL = "http://10.205.0.55:8080/api/getMileageCollection/";
-    String GET_CAR_API_URL = "http://10.205.0.55:8080/api/getCarDetails/";
-    String INSERT_CAR_API_URL = "http://10.205.0.55:8080/api/insertCarDetails/";
+    String INSERT_API_URL = "http://192.168.1.8:8080/api/insertMileageCollection/";
+    String GET_API_URL = "http://192.168.1.8:8080/api/getMileageCollection/";
+    String GET_CAR_API_URL = "http://192.168.1.8:8080/api/getCarDetails/";
+    String INSERT_CAR_API_URL = "http://192.168.1.8:8080/api/insertCarDetails/";
 
     MileageCollection mileageCollection = new MileageCollection();
-    MileageCollection mileageCollection1;
+
     MileageModel model = new MileageModel();
     CarDetailsCollection carDetails = new CarDetailsCollection();
 
     //protected ArrayAdapter<String> unitDataAdapter;
 
     // data handles
-    //protected MileageData mileageData;
-    //protected MileageRecord currentMileageRecord;
+    protected MileageData mileageData;
+    protected MileageRecord currentMileageRecord;
     public static  String restoredEmailId ="";
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -147,7 +149,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         updateUIState();
 
         // data to keep track of
-        //mileageData = new MileageData(getContext());
+        mileageData = new MileageData(getContext());
 
         // location
         mlocManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
@@ -209,7 +211,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
             // clicked on start/resume/pause
             public void onClick(View v) {
                 // verify if it's a new track, pause, or resume
-                if (mileageCollection1 != null) {
+                if (currentMileageRecord != null) {
                     if (tracking) {
                         // pause was pressed
                         pauseTracking();
@@ -247,7 +249,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
             enableStopButton();
 
         } else {
-            if (mileageCollection1 != null) {
+            if (currentMileageRecord != null) {
                 // enable resume
                 enableResumeButton();
 
@@ -263,8 +265,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         }
 
         // update the distance display
-        if(mileageCollection1 != null)
-            updateMileage();
+        if(currentMileageRecord != null)
+            updateMileage(currentMileageRecord);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -357,11 +359,16 @@ public class HomeFragment extends android.support.v4.app.Fragment {
        // unitValue.setEnabled(false);
 
         // create a new record
-        mileageCollection1 = new MileageCollection();
-       // mileageCollection.setDate(new Date(System.currentTimeMillis()));
-
-        //mileageCollection.setDistance("0");
-        mileageCollection.setUnit("MILES");
+        currentMileageRecord = new MileageRecord();
+        currentMileageRecord.setDate(new Date(System.currentTimeMillis()));
+        currentMileageRecord.setDistance(0);
+        currentMileageRecord.setUnit("MILES");
+        currentMileageRecord.setGas(Double.parseDouble(carDetails.getFuel()));
+        currentMileageRecord.setMileage(Double.parseDouble(carDetails.getMileage()));
+        currentMileageRecord.setTotalDistance(Double.parseDouble(carDetails.getOdometer()));
+        currentMileageRecord.setTotalGasUtilized(Double.parseDouble(carDetails.getTotalGas()));
+        double range = currentMileageRecord.getMileage() * currentMileageRecord.getGas();
+        currentMileageRecord.setRange(range);
 
         // enable gps
         enableLocationUpdates();
@@ -408,10 +415,10 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         disableLocationUpdates();
 
         // persist the distance
-       // mileageData.insert(currentMileageRecord);
+ //       mileageData.insert(currentMileageRecord);
 
         // reset the current record
-        mileageCollection1 = null; // modified
+        currentMileageRecord = null;
 
         // allow new tracking
         enableStartButton();
@@ -431,7 +438,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         tracking = true;
 
         // add a location of 0 to essentially reset the starting point
-        mileageCollection.addCordinate(0, 0);
+        currentMileageRecord.addCordinate(0, 0);
 
         // track current location
         updateWithCurrentLocation();
@@ -443,9 +450,9 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     /**
      * Update the value of the distance driven on the UI
      *
-     *
+     * @param mileageRecord
      */
-    public void updateMileage() {
+    public void updateMileage(MileageRecord mileageRecord) {
 
         // determine how the distance should be displayed
         String selectedUnit = "MILES";
@@ -454,64 +461,56 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         int count =0;
         for (UnitEnum unit : UnitEnum.values()) {
             if (count==1) {
-                adjustedDistance = unit.convertFromMeters(Double.parseDouble(mileageCollection.getDistance()));
+                adjustedDistance = unit.convertFromMeters(mileageRecord.getDistance());
             }
             count++;
         }
 
 
-        double mileage = Double.parseDouble(mileageCollection.getMileage()==null?"0.0":mileageCollection.getMileage());
-        double adjustedGas = 0;
-        adjustedGas = Double.parseDouble(mileageCollection.getGasRemaining()==null?"0.0":mileageCollection.getGasRemaining()) - (adjustedDistance/mileage);
-        String gas = Double.toString((double)Math.round(adjustedGas*100.0)/100.0)+" gallons";
-
-        gasText.setText(gas);
-        mileageCollection.setGasRemaining(Double.toString((double)Math.round(adjustedGas*100.0)/100.0));
-
         double adjustedRange = 0;
-        String range="";
-        if(mileageCollection.getRange()!=null && !"".equalsIgnoreCase(mileageCollection.getRange())) {
-            adjustedRange = Double.parseDouble(mileageCollection.getRange() == null ? "0.0" : mileageCollection.getRange()) - adjustedDistance;
-            range = Double.toString((double) Math.round(adjustedRange * 100.0) / 100.0) + " miles";
-            mileageCollection.setRange(Double.toString((double) Math.round(adjustedRange * 100.0) / 100.0));
-        }else{
-            adjustedRange = Double.parseDouble(mileageCollection.getGasRemaining())*Double.parseDouble(mileageCollection.getMileage());
-        }
+        adjustedRange = mileageRecord.getRange() - adjustedDistance;
+        String range = Double.toString((double)Math.round(adjustedRange*100.0)/100.0);
 
-        rangeText.setText(range);
+        rangeText.setText(range+" miles");
+        mileageCollection.setRange(range);
 
-        String totalDistance = Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalDistance()==null?"0.0":mileageCollection.getTotalDistance())+adjustedDistance)*100.0)/100.0)+" miles";
-        text_total_distance.setText(totalDistance);
-        mileageCollection.setTotalDistance(Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalDistance()==null?"0.0":mileageCollection.getTotalDistance())+adjustedDistance)*100.0)/100.0));
-        carDetails.setOdometer(Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalDistance()==null?"0.0":mileageCollection.getTotalDistance())+adjustedDistance)*100.0)/100.0));
+        double mileage = mileageRecord.getMileage();
+        double adjustedGas = 0;
+        adjustedGas = mileageRecord.getGas() - (adjustedDistance/mileage);
+        String gas = Double.toString((double)Math.round(adjustedGas*100.0)/100.0);
 
-        String totalGas = Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalGas()==null?"0.0":mileageCollection.getTotalGas()))*100.0)/100.0)+" gallons";
-        text_total_gas.setText(totalGas);
-        mileageCollection.setTotalGas(Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalGas()==null?"0.0":mileageCollection.getTotalGas()))*100.0)/100.0));
-        carDetails.setTotalGas(Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalGas()==null?"0.0":mileageCollection.getTotalGas()))*100.0)/100.0));
+        gasText.setText(gas+" gallons");
+        mileageCollection.setGasRemaining(gas);
+        carDetails.setFuel(gas);
 
-        String totalGasCost = "$"+Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalGas()==null?"0.0":mileageCollection.getTotalGas()) * 2.56)*100.0)/100.0);
-        text_total_gas_cost.setText(totalGasCost);
-        mileageCollection.setTotalGasCost(Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalGas()==null?"0.0":mileageCollection.getTotalGas()) * 2.56)*100.0)/100.0));
-        carDetails.setTotalGasCost(Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalGas()==null?"0.0":mileageCollection.getTotalGas()) * 2.56)*100.0)/100.0));
+        String totalDistance = Double.toString((double)Math.round((mileageRecord.getTotalDistance()+adjustedDistance)*100.0)/100.0);
+        text_total_distance.setText(totalDistance+" miles");
+        mileageCollection.setTotalDistance(totalDistance);
+        carDetails.setOdometer(totalDistance);
 
-        mileage = Double.parseDouble(mileageCollection.getMileage()==null?"0.0":mileageCollection.getMileage());
-        String mileageString = Double.toString((double)Math.round(mileage*100.0)/100.0)+" mpg";
-        mileageText.setText(mileageString);
-        mileageCollection.setMileage(Double.toString((double)Math.round(mileage*100.0)/100.0));
-        carDetails.setMileage(Double.toString((double)Math.round(mileage*100.0)/100.0));
+        String totalGas = Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized())*100.0)/100.0);
+        text_total_gas.setText(totalGas+" gallons");
+        mileageCollection.setTotalGas(totalGas);
+        carDetails.setTotalGas(totalGas);
+
+        String totalGasCost = Double.toString((double)Math.round((mileageRecord.getTotalGasUtilized() * 2.56)*100.0)/100.0);
+        text_total_gas_cost.setText("$"+totalGasCost);
+        mileageCollection.setTotalGasCost(totalGasCost);
+        carDetails.setTotalGasCost(totalGasCost);
+        mileage = mileageRecord.getMileage();
+        String mileageString = Double.toString((double)Math.round(mileage*100.0)/100.0);
+        mileageText.setText(mileageString+" mpg");
+        mileageCollection.setMileage(mileageString);
+        carDetails.setMileage(mileageString);
 
         // distance in correct unit
-        String distance = Double.toString((double)Math.round(adjustedDistance*100.0)/100.0)+" miles";
+        String distance = Double.toString((double)Math.round(adjustedDistance*100.0)/100.0);
 
-        distanceText.setText(distance);
+        distanceText.setText(distance+" miles");
 
         //mileageCollection = new MileageCollection();
-        if(Double.parseDouble(mileageCollection.getDistance()==null?"0":mileageCollection.getDistance())<=0.0)
-            mileageCollection.setDistance(Double.toString((double)Math.round(adjustedDistance*100.0)/100.0));
-        carDetails.setFuel(Double.toString((double)Math.round(adjustedGas*100.0)/100.0));
-        mileageCollection.setRange(Double.toString((double)Math.round(adjustedRange*100.0)/100.0));
-        carDetails.setMileage(Double.toString((double)Math.round(mileage*100.0)/100.0));
+        //if(Double.parseDouble(mileageCollection.getDistance()==null?"0":mileageCollection.getDistance())<=0.0)
+            mileageCollection.setDistance(distance);
         DateFormat df = new SimpleDateFormat("MMddyyyy");
 
 // Get the date today using Calendar object.
@@ -522,13 +521,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         mileageCollection.setDate(reportDate);
 
         mileageCollection.setCar_id("1234");
-        carDetails.setOdometer(Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalDistance()==null?"0.0":mileageCollection.getTotalDistance())+adjustedDistance)*100.0)/100.0));
-        carDetails.setTotalGas(Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalGas()==null?"0.0":mileageCollection.getTotalGas()))*100.0)/100.0));
-        carDetails.setTotalGasCost(Double.toString((double)Math.round((Double.parseDouble(mileageCollection.getTotalGas()==null?"0.0":mileageCollection.getTotalGas()) * 2.56)*100.0)/100.0));
-        mileageCollection.setId(Math.random()+reportDate);
-
-        mileageCollection.setGasRemaining(Double.toString((double)Math.round(adjustedGas*100.0)/100.0));
-        mileageCollection.setMileage(Double.toString((double)Math.round(mileage*100.0)/100.0));
+         mileageCollection.setId(Math.random()+reportDate);
 
         mileageCollection.getCar_id();
 
@@ -579,12 +572,12 @@ public class HomeFragment extends android.support.v4.app.Fragment {
             double distanceTravelled = 0;
 
             // check if distance needs to be calculated
-            if (mileageCollection.getPreviousLatitude() != 0
-                    && mileageCollection.getPreviousLongitude() != 0) {
+            if (currentMileageRecord.getPreviousLatitude() != 0
+                    && currentMileageRecord.getPreviousLongitude() != 0) {
                 // call the service
                 distanceTravelled = distanceService.getDistanceTravelled(
-                        mileageCollection.getPreviousLatitude(),
-                        mileageCollection.getPreviousLongitude(), latitude,
+                        currentMileageRecord.getPreviousLatitude(),
+                        currentMileageRecord.getPreviousLongitude(), latitude,
                         longitude);
             }
 
@@ -592,17 +585,14 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
 
             // TODO make thread safe
-            mileageCollection.addCordinate(latitude, longitude);
+            currentMileageRecord.addCordinate(latitude, longitude);
 
             // update the current distance that has been travelled
-            double latestDis = Double.parseDouble(mileageCollection.getDistance()==null?"0":mileageCollection.getDistance())
-                    + distanceTravelled;
-            if(Double.parseDouble(mileageCollection.getDistance()==null?"0":mileageCollection.getDistance())<=0.0)
-                 mileageCollection.setDistance(Double.toString((double)Math.round(latestDis*100.0)/100.0));
+            currentMileageRecord.setDistance(currentMileageRecord.getDistance()
+                    + distanceTravelled);
 
             // update the UI
-            if(mileageCollection1!=null)
-                updateMileage();
+            updateMileage(currentMileageRecord);
         }
     }
 

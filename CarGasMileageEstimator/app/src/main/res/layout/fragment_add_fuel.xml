@@ -42,7 +42,8 @@
             android:paddingStart="20dp"
             android:layout_toRightOf="@+id/textFuelAdded"
             android:layout_below="@+id/textFuelDetails"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent"
+            android:inputType="numberDecimal"/>
 
         <Button
             android:layout_width="match_parent"

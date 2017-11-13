@@ -55,7 +55,7 @@ public class StatsFragment extends android.support.v4.app.Fragment {
     List<MileageCollection> mileageCollections = null;
     final Random random = new Random();
     MileageModel model = new MileageModel();
-    String GET_API_URL = "http://10.205.0.55:8080/api/getAllMileageCollections/";
+    String GET_API_URL = "http://192.168.1.8:8080/api/getAllMileageCollections/";
     Map<String,Double> distanceMap =null;
     Map<String,Double> fuelMap = null;
     Map<String,Double> mileageMap = null;

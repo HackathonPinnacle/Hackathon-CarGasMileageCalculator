@@ -37,7 +37,7 @@
             android:textColor="@color/colorAccent"/>
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextMake"
             android:hint="Make"
@@ -45,7 +45,7 @@
             android:paddingStart="20dp"
             android:layout_toRightOf="@+id/textMake"
             android:layout_below="@+id/textViewCarDetails"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
             android:textColor="@color/colorAccent"/>
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextModel"
             android:hint="Model"
@@ -78,7 +78,7 @@
             android:textColorHint="@color/colorAccent"/>
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextYear"
             android:hint="Year"
@@ -86,7 +86,8 @@
             android:layout_toRightOf="@+id/textYear"
             android:layout_below="@+id/editTextModel"
             android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"/>
+            android:textColorHint="@color/colorAccent"
+            android:inputType="number"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -98,7 +99,7 @@
             android:textColor="@color/colorAccent"/>
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextOdometer"
             android:hint="Odometer Reading"
@@ -106,7 +107,8 @@
             android:layout_toRightOf="@+id/textOdometer"
             android:layout_below="@+id/editTextYear"
             android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"/>
+            android:textColorHint="@color/colorAccent"
+            android:inputType="numberDecimal"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -118,7 +120,7 @@
             android:textColor="@color/colorAccent"/>
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextFuelCap"
             android:hint="Tank Capacity"
@@ -126,7 +128,8 @@
             android:layout_toRightOf="@+id/textFuelCap"
             android:layout_below="@+id/editTextOdometer"
             android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"/>
+            android:textColorHint="@color/colorAccent"
+            android:inputType="numberDecimal"/>
 
 
         <Button
@@ -218,7 +221,7 @@
             android:textSize="15dp"
             android:textStyle="italic"
             android:layout_below="@id/btnRunTestDrive"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/common_google_signin_btn_text_light_focused"
             android:id="@+id/textTermsAndConditions"
             android:textAlignment="center"
             android:visibility="invisible"/>
@@ -248,7 +251,7 @@
             android:textColor="@color/colorAccent"/>
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextEndOdometerReadings"
             android:hint="End Odometer Readings"
@@ -257,7 +260,8 @@
             android:layout_toRightOf="@+id/textEndOdometerReadings"
             android:layout_below="@+id/editTextFuelCap"
             android:textColorHint="@color/colorAccent"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent"
+            android:inputType="numberDecimal"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -270,7 +274,7 @@
             android:textColor="@color/colorAccent"/>
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextFuelConsumed"
             android:hint="Fuel Consumed"
@@ -279,7 +283,8 @@
             android:layout_toRightOf="@+id/textFuelConsumed"
             android:layout_below="@+id/editTextEndOdometerReadings"
             android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"/>
+            android:textColorHint="@color/colorAccent"
+            android:inputType="numberDecimal"/>
 
         <Button
             android:layout_width="match_parent"
