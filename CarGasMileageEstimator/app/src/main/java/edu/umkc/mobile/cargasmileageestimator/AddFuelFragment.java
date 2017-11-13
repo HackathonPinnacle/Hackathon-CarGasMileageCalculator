@@ -55,10 +55,10 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    static int fuelInDB = 0;
+    static Double fuelInDB = 0.0;
 
 
-    String INSERT_API_URL = "http://10.205.0.55:8080/api/insertCarDetailsCollection/";
+    String INSERT_API_URL = "http://10.205.0.55:8080/api/insertCarDetails/";
     String GET_API_URL = "http://10.205.0.55:8080/api/getCarDetails/";
     CarDetailsCollection carDetailsCollection;
 
@@ -121,7 +121,8 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                int totalFuel = fuelInDB + Integer.parseInt(editTextFuelAdded.getText().toString());
+                Double enteredFuel = Double.parseDouble(editTextFuelAdded.getText().toString());
+                Double totalFuel = fuelInDB + enteredFuel;
                 //Update fuel and push it to db.
                 carDetailsCollection = new CarDetailsCollection();
                 carDetailsCollection.setEmailId(editedRestoredEmailId);
@@ -210,7 +211,7 @@ public class AddFuelFragment extends android.support.v4.app.Fragment {
                 if (result != null && !"".equalsIgnoreCase(result)) {
                     JSONObject json = new JSONObject(result);
                     textTotalFuel.setText("fuel remaining: " +json.getString("fuel").toString());
-                    fuelInDB = Integer.parseInt(json.getString("fuel"));
+                    fuelInDB = Double.parseDouble(json.getString("fuel").toString());
                 }
 
             } catch (Exception e) {
