@@ -8,7 +8,7 @@ https://github.com/HackathonPinnacle/Hackathon-CarGasMileageCalculator/blob/mast
 
 Youtube Link - https://youtu.be/D3e-iCqGun0
 
-PPT - https://drive.google.com/open?id=1qcgX6eFlSt_KhjF9QqWuS4xXbyugEvU8
+Presentation of the above project - https://drive.google.com/open?id=1qcgX6eFlSt_KhjF9QqWuS4xXbyugEvU8
 
 Contributers:
 Vinuthna,
